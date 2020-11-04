@@ -1,5 +1,33 @@
-name: "Wait"
+name: "Licensed CI Rebuild"
 description: "Wait a designated number of milliseconds"
+inputs:
+  command:
+    description: "Licensed command to run"
+    required: false
+    default: "licensed"
+  github_token:
+    description: "Access token to push license updates to GitHub"
+    required: false
+    default: ${{ github.token }}
+  config_file:
+    description: "Path to licensed configuration file"
+    required: false
+    default: ".licensed.yml"
+  user_name:
+    description: "Name to use when pushing file changes"
+    required: false
+    default: "licensed-ci"
+  user_email:
+    description: "Email to use when pushing file changes"
+    required: false
+    default: "licensed-ci@users.noreply.github.com"
+  commit_message:
+    description: "Message to use when committing file changes"
+    required: false
+    default: "Auto-update license files"
+outputs:
+  log:
+    description: "The output log of license information"
 runs:
   using: "node12"
   main: "dist/index.js"
