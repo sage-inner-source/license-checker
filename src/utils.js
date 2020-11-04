@@ -44,7 +44,7 @@ async function getLicensedInput() {
     );
   }
 
-  return { command, configPath };
+  return { accepted, configPath };
 }
 
 module.exports = {

@@ -27,7 +27,8 @@
   "homepage": "https://github.com/christophercatt/licensed-ci-rebuild#readme",
   "dependencies": {
     "@actions/core": "^1.2.5",
-    "@actions/exec": "^1.0.4"
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^4.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.24.0",
