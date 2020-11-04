@@ -24,8 +24,8 @@ async function configureGit() {
 
 //retrieve and make available inputs related to licensed
 async function getLicensedInput() {
-  const accepted = { list: undefined, cache: undefined, status: undefined };
-  const command = core.getInput("command", { required: true });
+  const accepted = { licensed: "licensed", cache: "push", status: "schedule" };
+  let command = core.getInput("command", { required: true });
 
   if (!(command in accepted)) {
     throw new Error(
@@ -34,6 +34,8 @@ async function getLicensedInput() {
       ).join(", ")}`
     );
   }
+
+  command = accepted[command];
 
   const configPath = core.getInput("config_file", { required: true });
   try {
@@ -44,7 +46,7 @@ async function getLicensedInput() {
     );
   }
 
-  return { accepted, configPath };
+  return { command, configPath };
 }
 
 module.exports = {
