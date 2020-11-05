@@ -28,7 +28,6 @@ async function run() {
       switch (trigger) {
         case "push":
         case "schedule":
-        case "pull_request":
           workflow = workflows[trigger];
           break;
         default:
