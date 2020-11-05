@@ -1,19 +1,20 @@
 const core = require("@actions/core");
 const github = require("@actions/github");
-const utils = require("./utils");
+const git = require("./utils/git");
+const licensed = require("./utils/licensed");
 const workflows = require("./workflows");
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
     //configure local git client on runner
-    await utils.configureGit();
+    await git.configureGit();
 
     //init workflow
     let workflow;
 
     //get licensed input variables
-    const { command, configPath } = await utils.getLicensedInput();
+    const { command, configPath } = await licensed.getInput();
 
     if (command !== "licensed") {
       //non default command, assign specified workflow
