@@ -18,6 +18,7 @@ async function getInput() {
   command = accepted[command];
 
   const configPath = core.getInput("config_file", { required: true });
+  core.info(`Config file path is: ${configPath}`);
   try {
     await fs.access(configPath);
   } catch (err) {
