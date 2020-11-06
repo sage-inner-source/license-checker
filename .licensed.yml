@@ -12,5 +12,3 @@ cache_path: .licenses.ignored
 ignored:
 
 reviewed:
-  npm:
-    - "@actions/http-client"
