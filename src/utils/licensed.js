@@ -36,7 +36,7 @@ async function getInput() {
     await fs.access(configPath);
   } catch (err) {
     throw new Error(
-      "Config file not found. Please ensure the correct path has been entered"
+      `Config file not found. Please ensure the correct path has been entered: ${err}`
     );
   }
 
