@@ -21,18 +21,6 @@ async function getInput() {
   const workingPath = process.env.GITHUB_WORKSPACE;
   const configPath = `${workingPath}/${configFile}`;
 
-  //testing for fs directory search
-  /*let test = `${workingPath}/`;
-  core.info(`GitHub Workspace path is: ${test}`);
-  await fs.readdir(test, (err, files) => {
-
-    for (let i = 0; i < 4; i++) {
-      test += `FILE: ${files[i]}\n`;
-    }
-  });
-  core.info(`Config file path is: ${configPath}`);
-  core.info(test);*/
-
   try {
     fs.accessSync(configPath);
   } catch (err) {
@@ -42,6 +30,18 @@ async function getInput() {
   }
 
   return { command, configPath };
+}
+
+function checkExitCode(exitCode) {
+  switch (exitCode) {
+    case 0:
+    case 1:
+      break;
+    default:
+      throw new Error(
+        `Licensed failed during execution (exit code: ${exitCode})`
+      );
+  }
 }
 
 async function cacheLicenses(configPath) {
@@ -69,10 +69,7 @@ async function cacheLicenses(configPath) {
     options
   );
 
-  if (exitCode !== 0)
-    throw new Error(
-      `Licensed failed during execution (exit code: ${exitCode})`
-    );
+  checkExitCode(exitCode);
 
   return output;
 }
@@ -102,10 +99,7 @@ async function checkLicenses(configPath) {
     options
   );
 
-  if (exitCode !== 0)
-    throw new Error(
-      `Licensed failed during execution (exit code: ${exitCode})`
-    );
+  checkExitCode(exitCode);
 
   return output;
 }
