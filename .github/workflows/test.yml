@@ -29,6 +29,7 @@ jobs:
         with:
           command: cache
       - name: Run Status
+        uses: ./
         with:
           command: status
   test-default:
