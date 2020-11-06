@@ -8,8 +8,17 @@ async function run(configPath) {
   output.check = await licensed.checkLicenses(configPath);
 
   //temp check to check output is working
-  core.info("Logging output check now");
-  core.info(output);
+  core.info("********************");
+  core.info("Logging output cache log");
+  core.info(output.cache.log);
+  core.info("Logging output cache error");
+  core.info(output.cache.error);
+
+  core.info("********************");
+  core.info("Logging output check log");
+  core.info(output.check.log);
+  core.info("Logging output check error");
+  core.info(output.check.error);
 
   if (output.cache.error !== "") {
     //placeholder error

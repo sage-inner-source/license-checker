@@ -5,8 +5,11 @@ async function run(configPath) {
   const output = await licensed.checkLicenses(configPath);
 
   //temp check to check output is working
-  core.info("Logging output check now");
-  core.info(output);
+  core.info("********************");
+  core.info("Logging output log");
+  core.info(output.log);
+  core.info("Logging output error");
+  core.info(output.error);
 
   if (output.error !== "") {
     //placeholder error

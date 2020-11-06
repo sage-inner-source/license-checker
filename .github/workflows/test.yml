@@ -16,23 +16,7 @@ jobs:
       - uses: ./
         with:
           command: cache
-  test-schedule:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: npm ci && npm install --production
-      - uses: jonabc/setup-licensed@v1
-        with:
-          version: "2.x"
-      - name: Setup Cache
-        uses: ./
-        with:
-          command: cache
-      - name: Run Status
-        uses: ./
-        with:
-          command: status
-  test-default:
+  test-both:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

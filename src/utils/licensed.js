@@ -17,9 +17,9 @@ async function getInput() {
 
   command = accepted[command];
 
-  const config = core.getInput("config_file", { required: true });
+  const configFile = core.getInput("config_file", { required: true });
   const workingPath = process.env.GITHUB_WORKSPACE;
-  const configPath = `${workingPath}/${config}`;
+  const configPath = `${workingPath}/${configFile}`;
 
   //testing for fs directory search
   /*let test = `${workingPath}/`;
