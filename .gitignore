@@ -1,4 +1,5 @@
 node_modules/
+.licenses.ignored
 
 # Editors
 .vscode/
