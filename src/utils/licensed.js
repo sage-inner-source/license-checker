@@ -98,7 +98,7 @@ async function checkLicenses(configPath) {
 
   const exitCode = await exec.exec(
     "licensed",
-    ["cache", "-c", configPath],
+    ["status", "-c", configPath],
     options
   );
 
