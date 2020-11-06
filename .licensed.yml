@@ -13,4 +13,4 @@ ignored:
 
 reviewed:
   npm:
-    - actions/http-client
+    - "@actions/http-client"
