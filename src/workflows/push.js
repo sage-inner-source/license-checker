@@ -11,9 +11,9 @@ async function run(configPath) {
   core.info("Logging output error");
   core.info(output.error);
 
-  if (output.error !== "") {
+  if (output.success !== true) {
     //placeholder error
-    throw new Error("There is a caching error");
+    throw new Error(`${output.success}: Failed during license caching`);
   }
 }
 

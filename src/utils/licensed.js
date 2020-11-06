@@ -36,24 +36,21 @@ function checkExitCode(exitCode) {
   const shouldFail = core.getInput("should_fail") === "false" ? false : true;
 
   if (shouldFail && exitCode !== 0) {
-    throw new Error(
-      `Licensed failed during execution (exit code: ${exitCode})`
-    );
+    return `Licensed failed during execution (exit code: ${exitCode})`;
   }
 
   switch (exitCode) {
     case 0:
     case 1:
-      break;
+      return true;
     default:
-      throw new Error(
-        `Licensed failed during execution (exit code: ${exitCode})`
-      );
+      return `Licensed failed during execution (exit code: ${exitCode})`;
   }
 }
 
 async function cacheLicenses(configPath) {
   const output = {
+    success: "",
     log: "",
     error: "",
   };
@@ -77,13 +74,14 @@ async function cacheLicenses(configPath) {
     options
   );
 
-  checkExitCode(exitCode);
+  output.success = checkExitCode(exitCode);
 
   return output;
 }
 
 async function checkLicenses(configPath) {
   const output = {
+    success: "",
     log: "",
     error: "",
   };
@@ -107,7 +105,7 @@ async function checkLicenses(configPath) {
     options
   );
 
-  checkExitCode(exitCode);
+  output.success = checkExitCode(exitCode);
 
   return output;
 }
