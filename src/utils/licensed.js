@@ -18,7 +18,17 @@ async function getInput() {
   command = accepted[command];
 
   const configPath = core.getInput("config_file", { required: true });
+
+  //testing for fs directory search
+  let test = "./";
+  await fs.readdir(test, (err, files) => {
+    for (let i = 0; i < 4; i++) {
+      test += `FILE: ${files[i]}\n`;
+    }
+  });
   core.info(`Config file path is: ${configPath}`);
+  core.info(test);
+
   try {
     await fs.access(configPath);
   } catch (err) {
