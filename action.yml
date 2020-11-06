@@ -12,7 +12,7 @@ inputs:
   config_file:
     description: "Path to licensed configuration file"
     required: false
-    default: ".licensed.yml"
+    default: "./.licensed.yml"
   user_name:
     description: "Name to use when pushing file changes"
     required: false
