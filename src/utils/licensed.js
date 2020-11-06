@@ -22,18 +22,19 @@ async function getInput() {
   const configPath = `${workingPath}/${config}`;
 
   //testing for fs directory search
-  let test = `${workingPath}/`;
+  /*let test = `${workingPath}/`;
   core.info(`GitHub Workspace path is: ${test}`);
   await fs.readdir(test, (err, files) => {
+
     for (let i = 0; i < 4; i++) {
       test += `FILE: ${files[i]}\n`;
     }
   });
   core.info(`Config file path is: ${configPath}`);
-  core.info(test);
+  core.info(test);*/
 
   try {
-    await fs.access(configPath);
+    fs.accessSync(configPath);
   } catch (err) {
     throw new Error(
       `Config file not found. Please ensure the correct path has been entered: ${err}`
