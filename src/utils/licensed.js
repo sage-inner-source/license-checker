@@ -51,6 +51,8 @@ async function cacheLicenses(configPath) {
   };
 
   const options = {
+    silent: true,
+    ignoreReturnCode: true,
     listeners: {
       stdout: (data) => {
         output.log += data.toString();
@@ -58,8 +60,6 @@ async function cacheLicenses(configPath) {
       stderr: (data) => {
         output.error += data.toString();
       },
-      silent: true,
-      ignoreReturnCode: true,
     },
   };
 
@@ -81,6 +81,8 @@ async function checkLicenses(configPath) {
   };
 
   const options = {
+    silent: true,
+    ignoreReturnCode: true,
     listeners: {
       stdout: (data) => {
         output.log += data.toString();
@@ -88,8 +90,6 @@ async function checkLicenses(configPath) {
       stderr: (data) => {
         output.error += data.toString();
       },
-      silent: true,
-      ignoreReturnCode: true,
     },
   };
 
