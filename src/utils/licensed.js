@@ -20,7 +20,8 @@ async function getInput() {
   const configPath = core.getInput("config_file", { required: true });
 
   //testing for fs directory search
-  let test = "./";
+  let test = process.env.GITHUB_WORKSPACE;
+  core.info(`GitHub Workspace path is: ${test}`);
   await fs.readdir(test, (err, files) => {
     for (let i = 0; i < 4; i++) {
       test += `FILE: ${files[i]}\n`;
