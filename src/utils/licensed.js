@@ -99,7 +99,9 @@ async function checkLicenses(configPath) {
     options
   );
 
+  core.info(`checking exit code: ${exitCode}`);
   checkExitCode(exitCode);
+  core.info(`finished checking exit code: ${exitCode}`);
 
   return output;
 }
