@@ -13,8 +13,12 @@ inputs:
     description: "Path to licensed configuration file"
     required: false
     default: ".licensed.yml"
+  display_output:
+    description: "Should licensed output be displayed in action logs"
+    required: false
+    default: "false"
   should_fail:
-    description: "Whether or not to fail if licenses for review are found"
+    description: "Should action fail if licenses for review are found"
     required: false
     default: "false"
   user_name:

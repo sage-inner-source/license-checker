@@ -1,15 +1,12 @@
-const core = require("@actions/core");
+const log = require("../utils/log");
 const licensed = require("../utils/licensed");
 
 async function run(configPath) {
   const output = await licensed.cacheLicenses(configPath);
 
-  //temp check to check output is working
-  core.info("********************");
-  core.info("Logging output log");
-  core.info(output.log);
-  core.info("Logging output error");
-  core.info(output.error);
+  if (log.shouldDisplayLogs()) {
+    log.write("Caching Process", output.log);
+  }
 
   if (output.success !== true) {
     //placeholder error
