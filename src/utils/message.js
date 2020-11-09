@@ -54,7 +54,9 @@ async function send(log) {
     options
   );
 
-  console.log(response);
+  core.info(response);
+  core.info(output.log);
+  core.info(output.error);
 }
 
 module.exports = {
