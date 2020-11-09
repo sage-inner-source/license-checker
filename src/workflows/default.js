@@ -17,19 +17,43 @@ async function run(configPath) {
   core.setOutput("cache_log", output.cache.log);
   core.setOutput("status_log", output.status.log);
 
-  if (output.cache.success !== true) {
+  switch (output.cache.success) {
+    case 0:
+      break;
+    case 1:
+      message.send(output.cache.log);
+      break;
+    default:
+      message.send(output.cache.log);
+      throw new Error(`${output.cache.success}: Failed during license caching`);
+  }
+
+  /*if (output.cache.success !== true) {
     message.send(output.cache.log);
 
     throw new Error(`${output.cache.success}: Failed during license caching`);
+  }*/
+
+  switch (output.status.success) {
+    case 0:
+      break;
+    case 1:
+      message.send(output.status.log);
+      break;
+    default:
+      message.send(output.status.log);
+      throw new Error(
+        `${output.status.success}: Failed during license status checks`
+      );
   }
 
-  if (output.status.success !== true) {
+  /* if (output.status.success !== true) {
     message.send(output.status.log);
 
     throw new Error(
       `${output.status.success}: Failed during license status checks`
     );
-  }
+  }*/
 }
 
 module.exports = run;

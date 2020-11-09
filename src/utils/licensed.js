@@ -41,8 +41,9 @@ function checkExitCode(exitCode) {
 
   switch (exitCode) {
     case 0:
+      return 0;
     case 1:
-      return true;
+      return 1;
     default:
       return `Licensed failed during execution (exit code: ${exitCode})`;
   }

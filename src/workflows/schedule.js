@@ -12,10 +12,15 @@ async function run(configPath) {
 
   core.setOutput("status_log", output.log);
 
-  if (output.success !== true) {
-    message.send(output.log);
-
-    throw new Error(`${output.success}: Failed during license status checks`);
+  switch (output.success) {
+    case 0:
+      break;
+    case 1:
+      message.send(output.log);
+      break;
+    default:
+      message.send(output.log);
+      throw new Error(`${output.success}: Failed during license status checks`);
   }
 }
 
