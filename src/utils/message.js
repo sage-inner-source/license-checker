@@ -26,10 +26,10 @@ async function send(log) {
   const repo = github.context.repo.repo;
   const subject = `The repository '${repo}' has dependency licenses that need reviewing`;
   const topic = core.getInput("sns_topic", { required: true });
-  //const message = log;
+  const message = log;
 
   const options = {
-    silent: false,
+    silent: true,
     ignoreReturnCode: true,
     listeners: {
       stdout: (data) => {
@@ -51,14 +51,16 @@ async function send(log) {
       "--subject",
       subject,
       "--message",
-      "message",
+      message,
     ],
     options
   );
-  core.warning("test");
-  core.info(response);
-  core.info(output.log);
-  core.info(output.error);
+
+  if (response.hasOwnProperty("MessageId")) {
+    core.info("success");
+  } else {
+    core.warning("error");
+  }
 }
 
 module.exports = {
