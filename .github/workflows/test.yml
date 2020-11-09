@@ -25,3 +25,5 @@ jobs:
         with:
           version: "2.x"
       - uses: ./
+        with:
+          display_output: "true"
