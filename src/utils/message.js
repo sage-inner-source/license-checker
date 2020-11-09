@@ -54,7 +54,7 @@ async function send(log) {
     options
   );
 
-  if (log.toString().includes("MessageId")) {
+  if (output.log.includes("MessageId")) {
     core.info("License's sent to AWS Topic");
   } else {
     throw new Error(
