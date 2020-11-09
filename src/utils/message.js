@@ -5,6 +5,8 @@ const github = require("@actions/github");
 function shouldSendToSNS() {
   const topic = core.getInput("sns_topic", { required: true });
 
+  core.info(topic);
+
   if (topic === "false") {
     return false;
   }
@@ -16,7 +18,7 @@ async function send(log) {
   if (!shouldSendToSNS()) return;
 
   const output = {
-    success: "",
+    success: log,
     log: "",
     error: "",
   };
@@ -24,7 +26,7 @@ async function send(log) {
   const repo = github.context.repo.repo;
   const subject = `The repository '${repo}' has dependency licenses that need reviewing`;
   const topic = core.getInput("sns_topic", { required: true });
-  const message = log;
+  //const message = log;
 
   const options = {
     silent: false,
