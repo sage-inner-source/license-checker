@@ -2,7 +2,7 @@ allowed:
   - apache-2.0
   - bsd-2-clause
   - mit
-  -isc
+  - isc
 
 cache_path: .licenses
 
