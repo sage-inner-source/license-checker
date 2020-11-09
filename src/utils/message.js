@@ -56,10 +56,12 @@ async function send(log) {
     options
   );
 
-  if (response.hasOwnProperty("MessageId")) {
-    core.info("success");
+  if (response.includes("MessageId")) {
+    core.info("License's sent to AWS Topic");
   } else {
-    core.warning("error");
+    throw new Error(
+      `Message failed to send to AWS Topic. Please ensure your credentials are correct.\nError details:\n ${response}`
+    );
   }
 }
 
