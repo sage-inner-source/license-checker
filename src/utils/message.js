@@ -2,9 +2,26 @@ const exec = require("@actions/exec");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
+//Example error message
+/*
+Checking cached dependency records for licensed-ci-rebuild
+...F...................
+Errors:
+* licensed-ci-rebuild.npm.@actions/http-client
+  filename: /home/runner/work/licensed-ci-rebuild/licensed-ci-rebuild/.licenses.ignored/npm/@actions/http-client.dep.yml
+    - license needs review: other
+*/
+
 function parse(log) {
-  const parts = log.split("Errors:");
-  const errors = parts[1];
+  const messageParts = log.split("Errors:");
+  const errorSection = messageParts[1];
+  const errors = errorSection.split("* ");
+
+  let minifiedErrors = errors.map((error) => {
+    error = error.split("filename: ");
+    error = error[1];
+  });
+
   return message;
 }
 

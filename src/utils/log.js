@@ -11,8 +11,8 @@ function shouldDisplayLogs() {
 }
 
 function write(logName, log) {
-  core.info(`**** Now displaying ${logName}`);
-  core.info();
+  core.info(`**** Now displaying ${logName} ****`);
+  core.info("");
   core.info(log);
 }
 
