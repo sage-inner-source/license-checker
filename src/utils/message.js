@@ -53,7 +53,7 @@ async function send(log) {
     ],
     options
   );
-
+  core.warning("test");
   core.info(response);
   core.info(output.log);
   core.info(output.error);
