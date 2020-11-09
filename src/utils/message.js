@@ -5,8 +5,6 @@ const github = require("@actions/github");
 function shouldSendToSNS() {
   const topic = core.getInput("sns_topic", { required: true });
 
-  core.info(topic);
-
   if (topic === "false") {
     return false;
   }
@@ -56,7 +54,7 @@ async function send(log) {
     options
   );
 
-  if (response.includes("MessageId")) {
+  if (log.toString().includes("MessageId")) {
     core.info("License's sent to AWS Topic");
   } else {
     throw new Error(
