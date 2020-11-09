@@ -4,8 +4,6 @@ allowed:
   - bsd-3-clause
   - isc
   - mit
-  - cc0-1.0
-  - unlicense
 
 cache_path: .licenses.ignored
 
