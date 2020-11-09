@@ -57,9 +57,10 @@ async function send(log) {
   if (output.log.includes("MessageId")) {
     core.info("License's sent to AWS Topic");
   } else {
-    throw new Error(
+    core.warning(
       `Message failed to send to AWS Topic. Please ensure your credentials are correct.\nError details:\n ${response}`
     );
+    core.info(`Outputting message to logs:\n${message}`);
   }
 }
 
