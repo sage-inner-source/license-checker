@@ -1,8 +1,9 @@
 allowed:
   - apache-2.0
   - bsd-2-clause
+  - mit
 
-cache_path: .licenses.ignored
+cache_path: .licenses
 
 ignored:
 
