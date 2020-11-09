@@ -2,40 +2,19 @@ const exec = require("@actions/exec");
 const core = require("@actions/core");
 const github = require("@actions/github");
 
-//Example error message
-/*
-Checking cached dependency records for licensed-ci-rebuild
-...F...................
-Errors:
-* licensed-ci-rebuild.npm.@actions/http-client
-  filename: /home/runner/work/licensed-ci-rebuild/licensed-ci-rebuild/.licenses.ignored/npm/@actions/http-client.dep.yml
-    - license needs review: other
-*/
-
-function parse(log) {
-  const messageParts = log.split("Errors:");
-  const errorSection = messageParts[1];
-  const errors = errorSection.split("* ");
-
-  let minifiedErrors = errors.map((error) => {
-    error = error.split("filename: ");
-    error = error[1];
-  });
-
-  return message;
-}
-
 function shouldSendToSNS() {
   const topic = core.getInput("sns_topic", { required: true });
 
-  if (!topic) {
+  if (topic === "false") {
     return false;
   }
 
   return true;
 }
 
-async function send(message) {
+async function send(log) {
+  if (!shouldSendToSNS()) return;
+
   const output = {
     success: "",
     log: "",
@@ -45,6 +24,7 @@ async function send(message) {
   const repo = github.context.repo.repo;
   const subject = `The repository '${repo}' has dependency licenses that need reviewing`;
   const topic = core.getInput("sns_topic", { required: true });
+  const message = log;
 
   const options = {
     silent: true,
@@ -78,7 +58,5 @@ async function send(message) {
 }
 
 module.exports = {
-  parse,
-  shouldSendToSNS,
   send,
 };

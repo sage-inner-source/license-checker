@@ -21,6 +21,10 @@ inputs:
     description: "Should action fail if licenses for review are found"
     required: false
     default: "false"
+  sns_topic:
+    description: "AWS SNS Topic to push error logs to. Leave blank or 'false' to disable feature"
+    required: false
+    default: "false"
   user_name:
     description: "Name to use when pushing file changes"
     required: false
@@ -34,8 +38,10 @@ inputs:
     required: false
     default: "Auto-update license files"
 outputs:
-  log:
-    description: "The output log of license information"
+  cache_log:
+    description: "The output log of license caching"
+  status_log:
+    description: "The output log of license status checking"
 runs:
   using: "node12"
   main: "dist/index.js"
