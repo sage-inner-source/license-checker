@@ -49,7 +49,7 @@ async function send(log) {
       "--subject",
       subject,
       "--message",
-      message,
+      "message",
     ],
     options
   );
