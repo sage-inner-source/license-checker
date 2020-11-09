@@ -27,7 +27,7 @@ async function send(log) {
   const message = log;
 
   const options = {
-    silent: true,
+    silent: false,
     ignoreReturnCode: true,
     listeners: {
       stdout: (data) => {
