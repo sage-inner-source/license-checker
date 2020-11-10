@@ -14,6 +14,8 @@ jobs:
         with:
           version: "2.x"
       - uses: ./
+        with:
+          command: "full"
   should-fail:
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +26,7 @@ jobs:
           version: "2.x"
       - uses: ./
         with:
+          command: "full"
           should_fail: "true"
           display_output: "true"
   sns:
@@ -42,4 +45,5 @@ jobs:
           aws-region: eu-west-2
       - uses: ./
         with:
+          command: "full"
           sns_topic: ${{ secrets.AWS_TOPIC }}

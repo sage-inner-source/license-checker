@@ -24,17 +24,24 @@ async function run() {
       //get trigger
       let trigger = github.context.eventName;
 
+      core.info(trigger);
+
+      //check if default workflow has been requested
       if (command === "both") {
         trigger = "default";
       }
+
+      core.info(trigger);
 
       //assign event trigger as workflow
       switch (trigger) {
         case "push":
         case "schedule":
+          core.info("entered push/schedule");
           workflow = workflows[trigger];
           break;
         default:
+          core.info("entered default");
           workflow = workflows["default"];
           break;
       }
