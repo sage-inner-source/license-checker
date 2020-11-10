@@ -23,6 +23,7 @@ async function run() {
       //default command, run off event trigger
       //get trigger
       let trigger = github.context.eventName;
+      core.info(github.context.ref);
 
       //check if default workflow has been requested
       if (command === "both") {
