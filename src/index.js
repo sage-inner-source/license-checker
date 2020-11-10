@@ -24,6 +24,10 @@ async function run() {
       //get trigger
       let trigger = github.context.eventName;
 
+      if (command === "both") {
+        trigger = "default";
+      }
+
       //assign event trigger as workflow
       switch (trigger) {
         case "push":
