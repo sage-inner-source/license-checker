@@ -4,7 +4,12 @@ const fs = require("fs");
 
 //retrieve and make available inputs related to licensed
 async function getInput() {
-  const accepted = { licensed: "default", cache: "push", status: "schedule" };
+  const accepted = {
+    licensed: "default",
+    cache: "push",
+    status: "schedule",
+    full: "both",
+  };
   let command = core.getInput("command", { required: true });
 
   if (!(command in accepted)) {

@@ -16,7 +16,7 @@ async function run() {
     //get licensed input variables
     const { command, configPath } = await licensed.getInput();
 
-    if (command !== "licensed") {
+    if (command !== "default") {
       //non default command, assign specified workflow
       workflow = workflows[command];
     } else {
