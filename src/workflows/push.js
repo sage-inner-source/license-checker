@@ -2,8 +2,14 @@ const core = require("@actions/core");
 const log = require("../utils/log");
 const licensed = require("../utils/licensed");
 const message = require("../utils/message");
+const git = require("../utils/git");
 
 async function run(configPath) {
+  const shouldCache = licensed.shouldCacheLicenses();
+  if (shouldCache) {
+    git.configureLicenseBranch(0);
+  }
+
   const output = await licensed.cacheLicenses(configPath);
 
   if (log.shouldDisplayLogs()) {
@@ -21,6 +27,10 @@ async function run(configPath) {
     default:
       message.send(output.log);
       throw new Error(`${output.success}: Failed during license caching`);
+  }
+
+  if (shouldCache) {
+    git.cacheLicensesToBranch();
   }
 }
 

@@ -43,10 +43,6 @@ async function run() {
 
     //run workflow
     await workflow(configPath);
-
-    if (licensed.shouldCacheLicenses()) {
-      git.cacheLicensesToBranch();
-    }
   } catch (error) {
     core.setFailed(error.message);
   }

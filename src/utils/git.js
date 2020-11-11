@@ -43,6 +43,15 @@ async function configureLicenseBranch(retries) {
       break;
   }
 
+  let exitCode = await exec.exec(
+    "git",
+    ["merge", "-s", "recursive", "-Xtheirs", `origin/${branch}`],
+    { ignoreReturnCode: true }
+  );
+  if (exitCode !== 0) {
+    core.setFailed(`Unable to get ${branch} up to date`);
+  }
+
   return branch;
 }
 
@@ -91,7 +100,7 @@ async function ensureBranch(branch, retries) {
 }
 
 async function cacheLicensesToBranch() {
-  const branch = await configureLicenseBranch();
+  const branch = core.getInput("license_branch", { required: true });
 
   if (branch !== "main" && branch !== "master") {
     overwriteGitignoreFile();
@@ -111,15 +120,6 @@ async function pushToGitHub(branch, retries) {
     core.setFailed(
       "Failed to push git branch within maximum number of retries"
     );
-  }
-
-  let exitCode = await exec.exec(
-    "git",
-    ["merge", "-s", "recursive", "-Xtheirs", `origin/${branch}`],
-    { ignoreReturnCode: true }
-  );
-  if (exitCode !== 0) {
-    throw new Error(`Unable to get ${branch} up to date`);
   }
 
   const commitMessage = core.getInput("commit_message", { required: true });
@@ -151,4 +151,5 @@ async function pushToGitHub(branch, retries) {
 module.exports = {
   configureGit,
   cacheLicensesToBranch,
+  configureLicenseBranch,
 };
