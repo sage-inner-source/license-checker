@@ -28,7 +28,7 @@ inputs:
   license_branch:
     description: "Name of branch to cache licenses to (if branch doesn't exist, it will be made)"
     required: false
-    default: ".licenses"
+    default: "licenses"
   cache_path:
     description: "Path to store licenses. Please ensure this is the same as the value within your '.licensed.yml' file"
     required: false
