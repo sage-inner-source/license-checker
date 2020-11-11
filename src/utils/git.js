@@ -73,7 +73,7 @@ async function changeBranch(branch) {
 function overwriteGitignoreFile() {
   const cachePath = core.getInput("cache_path", { required: true });
   const gitignorePath = `${process.env.GITHUB_WORKSPACE}/.gitignore`;
-  const contents = `*\n!${cachePath}`;
+  const contents = `/*\n!/${cachePath}`;
 
   fs.writeFileSync(gitignorePath, contents);
 }
@@ -116,13 +116,41 @@ async function cacheLicensesToBranch() {
     console.log(file);
   });
 
+  pushToGitHub(branch, 0);
+}
+
+async function pushToGitHub(branch, retries) {
+  if (retries > 3) {
+    core.setFailed(
+      "Failed to push git branch within maximum number of retries"
+    );
+  }
+
   const commitMessage = core.getInput("commit_message", { required: true });
 
   await exec.exec("git", ["add", "."], { ignoreErrorCode: true });
   await exec.exec("git", ["commit", "-m", commitMessage], {
     ignoreErrorCode: true,
   });
-  await exec.exec("git", ["push", "origin", branch], { ignoreErrorCode: true });
+
+  let output = "";
+
+  const pushOptions = {
+    ignoreErrorCode: true,
+    listeners: {
+      stdout: (data) => {
+        output += data.toString();
+      },
+    },
+  };
+
+  await exec.exec("git", ["push", "origin", branch], pushOptions);
+
+  if (output.includes("git pull")) {
+    await exec.exec("git", ["pull", "origin", branch]);
+    core.info("Retrying push");
+    pushToGitHub(branch, retries++);
+  }
 }
 
 module.exports = {
