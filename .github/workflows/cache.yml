@@ -17,3 +17,4 @@ jobs:
         with:
           command: "full"
           should_cache_licenses: "true"
+          display_output: "true"
