@@ -131,6 +131,7 @@ async function pushToGitHub(branch, retries) {
     },
   };
 
+  await exec.exec("git", ["pull", "origin", branch]);
   await exec.exec("git", ["push", "origin", branch], pushOptions);
 
   if (output.includes("git pull")) {
