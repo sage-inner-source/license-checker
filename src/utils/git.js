@@ -113,6 +113,15 @@ async function pushToGitHub(branch, retries) {
     );
   }
 
+  let exitCode = await exec.exec(
+    "git",
+    ["merge", "-s", "recursive", "-Xtheirs", `origin/${branch}`],
+    { ignoreReturnCode: true }
+  );
+  if (exitCode !== 0) {
+    throw new Error(`Unable to get ${branch} up to date`);
+  }
+
   const commitMessage = core.getInput("commit_message", { required: true });
 
   await exec.exec("git", ["add", "."], { ignoreErrorCode: true });
@@ -130,13 +139,6 @@ async function pushToGitHub(branch, retries) {
       },
     },
   };
-
-  await exec.exec("git", [
-    "pull",
-    "origin",
-    branch,
-    "--allow-unrelated-histories",
-  ]);
   await exec.exec("git", ["push", "origin", branch], pushOptions);
 
   if (output.includes("git pull")) {
