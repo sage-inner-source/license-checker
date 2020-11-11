@@ -47,14 +47,6 @@ async function configureLicenseBranch(retries) {
 }
 
 async function changeBranch(branch) {
-  core.info("showing all branches");
-  await exec.exec("git", ["branch"], { ignoreReturnCode: true });
-  core.info("showing files in directory before changing branch");
-
-  fs.readdirSync(`${process.env.GITHUB_WORKSPACE}/`).forEach((file) => {
-    console.log(file);
-  });
-
   const doesBranchExist = await exec.exec(
     "git",
     ["show-ref", "-q", "--heads", branch],
@@ -110,11 +102,6 @@ async function cacheLicensesToBranch() {
       required: true,
     })}'`
   );
-
-  core.info("displaying files in new branch before push");
-  fs.readdirSync(`${process.env.GITHUB_WORKSPACE}/`).forEach((file) => {
-    console.log(file);
-  });
 
   pushToGitHub(branch, 0);
 }
