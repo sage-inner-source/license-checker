@@ -49,7 +49,7 @@ async function configureLicenseBranch(retries) {
 async function changeBranch(branch) {
   const doesBranchExist = await exec.exec(
     "git",
-    ["show-ref", "-q", "--heads", branch],
+    ["show-ref", "--heads", branch],
     { ignoreReturnCode: true }
   );
 
