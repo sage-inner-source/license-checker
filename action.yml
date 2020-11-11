@@ -21,6 +21,18 @@ inputs:
     description: "Should action fail if licenses for review are found"
     required: false
     default: "false"
+  should_cache_licenses:
+    description: "Should licenses be cached in branch to allow for status checks without caching first"
+    required: false
+    default: "false"
+  license_branch:
+    description: "Name of branch to cache licenses to (if branch doesn't exist, it will be made)"
+    required: false
+    default: ".licenses"
+  cache_path:
+    description: "Path to store licenses. Please ensure this is the same as the value within your '.licensed.yml' file"
+    required: false
+    default: ".licenses"
   sns_topic:
     description: "AWS SNS Topic to push error logs to. Leave blank or 'false' to disable feature"
     required: false

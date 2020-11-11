@@ -37,6 +37,18 @@ async function getInput() {
   return { command, configPath };
 }
 
+function shouldCacheLicenses() {
+  const shouldCache = core.getInput("should_cache_licenses", {
+    required: true,
+  });
+
+  if (shouldCache === "false") {
+    return false;
+  }
+
+  return true;
+}
+
 function checkExitCode(exitCode) {
   const shouldFail = core.getInput("should_fail") === "false" ? false : true;
 
@@ -120,4 +132,5 @@ module.exports = {
   cacheLicenses,
   checkLicenses,
   getInput,
+  shouldCacheLicenses,
 };

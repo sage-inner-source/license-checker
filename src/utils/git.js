@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 const exec = require("@actions/exec");
+const fs = require("fs");
 
 const ORIGIN = "licensed-ci-origin";
 
@@ -21,6 +22,97 @@ async function configureGit() {
   ]);
 }
 
+async function configureLicenseBranch(retries) {
+  if (retries > 3) {
+    core.setFailed(
+      "Failed to configure git branch within maximum number of retries"
+    );
+  }
+
+  const branch = core.getInput("license_branch", { required: true });
+  core.info(`Licenses will be cached on '${branch}' branch`);
+
+  switch (branch) {
+    case "main":
+    case "master":
+      ensureBranch(branch, retries);
+      break;
+    default:
+      await changeBranch(branch);
+      ensureBranch(branch, retries);
+      break;
+  }
+
+  return branch;
+}
+
+async function changeBranch(branch) {
+  const doesBranchExist = await exec.exec(
+    "git",
+    ["show-ref", "-q", "--heads", branch],
+    { ignoreReturnCode: true }
+  );
+
+  if (doesBranchExist === 0) {
+    core.info(`Switching to '${branch}' branch`);
+    await exec.exec("git", ["checkout", branch], { silent: true });
+  } else {
+    core.info(`Creating and switching to '${branch}' branch`);
+    await exec.exec("git", ["checkout", "-b", branch], { silent: true });
+  }
+}
+
+function overwriteGitignoreFile() {
+  const cachePath = core.getInput("cache_path", { required: true });
+  const gitignorePath = `${process.env.GITHUB_WORKSPACE}/.gitignore`;
+  const contents = `*\n!${cachePath}`;
+
+  fs.writeFileSync(gitignorePath, contents);
+}
+
+async function ensureBranch(branch, retries) {
+  let currentBranch = "";
+
+  const options = {
+    silent: true,
+    ignoreReturnCode: true,
+    listeners: {
+      stdout: (data) => {
+        currentBranch += data.toString();
+      },
+    },
+  };
+
+  await exec.exec("git", ["branch", "--show-current"], options);
+
+  if (!currentBranch.includes(branch)) {
+    await configureLicenseBranch(retries++);
+  }
+}
+
+async function cacheLicensesToBranch() {
+  const branch = await configureLicenseBranch();
+
+  if (branch !== "main" && branch !== "master") {
+    overwriteGitignoreFile();
+  }
+
+  core.info(
+    `Pushing changes to '${core.getInput("license_branch", {
+      required: true,
+    })}'`
+  );
+
+  const commitMessage = core.getInput("commit_message", { required: true });
+
+  await exec.exec("git", ["add", "."], { ignoreErrorCode: true });
+  await exec.exec("git", ["commit", "-m", commitMessage], {
+    ignoreErrorCode: true,
+  });
+  await exec.exec("git", ["push", "origin", branch], { ignoreErrorCode: true });
+}
+
 module.exports = {
   configureGit,
+  cacheLicensesToBranch,
 };
