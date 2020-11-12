@@ -73,7 +73,10 @@ async function changeBranch(branch) {
     ignoreReturnCode: true,
   });
 
-  return currentBranch;
+  //remove any line breaks imposed by git command
+  currentBranch.replace(/[\r\n]+/gm, "");
+
+  return currentBranch.trim();
 }
 
 async function ensureBranch(branch, retries) {
