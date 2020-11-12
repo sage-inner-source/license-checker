@@ -38,45 +38,42 @@ async function configureLicenseBranch(retries) {
       ensureBranch(branch, retries);
       break;
     default:
-      await changeBranch(branch);
+      const originalBranch = await changeBranch(branch);
       ensureBranch(branch, retries);
+      copyFilesToBranch(originalBranch);
       break;
-  }
-
-  let exitCode = await exec.exec(
-    "git",
-    ["merge", "-s", "recursive", "-Xtheirs", `origin/${branch}`],
-    { ignoreReturnCode: true }
-  );
-  if (exitCode !== 0) {
-    core.setFailed(`Unable to get ${branch} up to date`);
   }
 
   return branch;
 }
 
 async function changeBranch(branch) {
-  const doesBranchExist = await exec.exec(
-    "git",
-    ["show-ref", "-q", "--heads", branch],
-    { ignoreReturnCode: true }
-  );
+  let currentBranch = "";
+  const options = {
+    silent: true,
+    ignoreReturnCode: true,
+    listeners: {
+      stdout: (data) => {
+        currentBranch += data.toString();
+      },
+    },
+  };
 
-  if (doesBranchExist === 0) {
-    core.info(`Switching to '${branch}' branch`);
-    await exec.exec("git", ["checkout", branch], { silent: true });
-  } else {
-    core.info(`Creating and switching to '${branch}' branch`);
-    await exec.exec("git", ["checkout", "-b", branch], { silent: true });
-  }
-}
+  await exec.exec("git", ["branch", "--show-current"], options);
+  core.info(`Current branch is '${currentBranch}'`);
 
-function overwriteGitignoreFile() {
-  const cachePath = core.getInput("cache_path", { required: true });
-  const gitignorePath = `${process.env.GITHUB_WORKSPACE}/.gitignore`;
-  const contents = `/*\n!/${cachePath}`;
+  core.info(`Creating and switching to '${branch}' branch`);
+  //create branch with no commit history
+  await exec.exec("git", ["checkout", "--orphan", branch], { silent: true });
+  //remove existing files from branch
+  await exec.exec("git", ["rm", "-rf", "."], { silent: true });
+  //pull licenses branch to ensure commit history (if branch exists)
+  await exec.exec("git", ["pull", "origin", branch], {
+    silent: true,
+    ignoreReturnCode: true,
+  });
 
-  fs.writeFileSync(gitignorePath, contents);
+  return currentBranch;
 }
 
 async function ensureBranch(branch, retries) {
@@ -99,20 +96,11 @@ async function ensureBranch(branch, retries) {
   }
 }
 
-async function cacheLicensesToBranch() {
-  const branch = core.getInput("license_branch", { required: true });
+async function copyFilesToBranch(originalBranch) {
+  core.info(`Copying license files from '${originalBranch}'`);
+  const cachePath = core.getInput("cache_path", { required: true });
 
-  if (branch !== "main" && branch !== "master") {
-    overwriteGitignoreFile();
-  }
-
-  core.info(
-    `Pushing changes to '${core.getInput("license_branch", {
-      required: true,
-    })}'`
-  );
-
-  pushToGitHub(branch, 0);
+  await exec.exec("git", ["checkout", originalBranch, cachePath]);
 }
 
 async function pushToGitHub(branch, retries) {
@@ -122,9 +110,10 @@ async function pushToGitHub(branch, retries) {
     );
   }
 
+  const cachePath = core.getInput("cache_path", { required: true });
   const commitMessage = core.getInput("commit_message", { required: true });
 
-  await exec.exec("git", ["add", "."], { ignoreErrorCode: true });
+  await exec.exec("git", ["add", cachePath], { ignoreErrorCode: true });
   await exec.exec("git", ["commit", "-m", commitMessage], {
     ignoreErrorCode: true,
   });
@@ -140,16 +129,21 @@ async function pushToGitHub(branch, retries) {
     },
   };
   await exec.exec("git", ["push", "origin", branch], pushOptions);
+}
 
-  if (output.includes("git pull")) {
-    await exec.exec("git", ["pull", "origin", branch]);
-    core.info("Retrying push");
-    pushToGitHub(branch, retries++);
-  }
+async function cacheLicensesToBranch() {
+  const branch = await configureLicenseBranch(0);
+
+  core.info(
+    `Pushing changes to '${core.getInput("license_branch", {
+      required: true,
+    })}'`
+  );
+
+  pushToGitHub(branch, 0);
 }
 
 module.exports = {
   configureGit,
   cacheLicensesToBranch,
-  configureLicenseBranch,
 };

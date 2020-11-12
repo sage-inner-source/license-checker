@@ -6,10 +6,6 @@ const git = require("../utils/git");
 
 async function run(configPath) {
   const shouldCache = licensed.shouldCacheLicenses();
-  if (shouldCache) {
-    git.configureLicenseBranch(0);
-  }
-
   const output = await licensed.cacheLicenses(configPath);
 
   if (log.shouldDisplayLogs()) {
