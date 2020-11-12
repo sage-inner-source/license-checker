@@ -2,6 +2,7 @@ const core = require("@actions/core");
 const log = require("../utils/log");
 const licensed = require("../utils/licensed");
 const message = require("../utils/message");
+const git = require("../utils/git");
 
 async function run(configPath) {
   const shouldCache = licensed.shouldCacheLicenses();
