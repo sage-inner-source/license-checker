@@ -60,6 +60,10 @@ async function changeBranch(branch) {
   };
 
   await exec.exec("git", ["branch", "--show-current"], options);
+
+  //remove any line breaks and whitespace imposed by git command
+  currentBranch = currentBranch.replace(/[\r\n]+/gm, "");
+  currentBranch = currentBranch.trim();
   core.info(`Current branch is '${currentBranch}'`);
 
   core.info(`Creating and switching to '${branch}' branch`);
@@ -73,10 +77,7 @@ async function changeBranch(branch) {
     ignoreReturnCode: true,
   });
 
-  //remove any line breaks imposed by git command
-  currentBranch.replace(/[\r\n]+/gm, "");
-
-  return currentBranch.trim();
+  return currentBranch;
 }
 
 async function ensureBranch(branch, retries) {
