@@ -58,7 +58,7 @@ steps:
     with:
       version: "2.x"
   - name: Check Licenses
-    uses: sage-inner-source/license-checker@v1
+    uses: sage-inner-source/license-checker@v1.0.0
     with:
       should_fail: "true"
       display_output: "true"
@@ -72,7 +72,7 @@ steps:
   - uses: actions/checkout@v2
   - name: Install Repo Dependencies
     run: mvn install
-  - Setup Licensed
+  - name: Setup Licensed
     uses: jonabc/setup-licensed@v1
     with:
       version: "2.x"
@@ -83,7 +83,7 @@ steps:
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: eu-west-2
   - name: Check Licenses
-    uses: sage-inner-source/license-checker@v1
+    uses: sage-inner-source/license-checker@v1.0.0
     with:
       sns_topic: ${{ secrets.AWS_TOPIC }}
 ```
