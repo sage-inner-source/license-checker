@@ -43,7 +43,7 @@ If you wish/require to build further pipelines based on the result of the licens
 
 ## Usage
 
-**Note: Examples shown are installing `node.js` and `java` applications. Please change the `Install Repo Dependencies` step to reflect the language/package manager you are using. Repeat for multiple languages/package managers within the same repository. If no licenses are scanned, then please ensure the language/package manager is supported by [github/licensed](https://github.com/github/licensed/tree/master/docs/sources).**
+**Note: Examples shown are installing `node.js` and `java` applications. Please change the `Install Repo Dependencies` step to reflect the language/package manager you are using. Repeat for multiple languages/package managers within the same repository. If no licenses are scanned, then please ensure the language/package manager is supported by [github/licensed](https://github.com/github/licensed/tree/master/docs/sources) and carry out any dditional steps mentioned for the specific source.**
 
 Basic usage displaying `licensed` output to the workflow logs and failing if licenses needing review are found.
 
