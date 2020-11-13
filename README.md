@@ -58,7 +58,7 @@ steps:
     with:
       version: "2.x"
   - name: Check Licenses
-    uses: sage-inner-source/license-checker@v1.0.0
+    uses: sage-inner-source/license-checker@v1.1.0
     with:
       should_fail: "true"
       display_output: "true"
@@ -83,7 +83,7 @@ steps:
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       aws-region: eu-west-2
   - name: Check Licenses
-    uses: sage-inner-source/license-checker@v1.0.0
+    uses: sage-inner-source/license-checker@v1.1.0
     with:
       sns_topic: ${{ secrets.AWS_TOPIC }}
 ```
