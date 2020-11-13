@@ -1,10 +1,6 @@
 name: "Licensed CI Rebuild"
 description: "Wait a designated number of milliseconds"
 inputs:
-  command:
-    description: "Licensed command to run"
-    required: false
-    default: "licensed"
   github_token:
     description: "Access token to push license updates to GitHub"
     required: false
@@ -21,34 +17,10 @@ inputs:
     description: "Should action fail if licenses for review are found"
     required: false
     default: "false"
-  should_cache_licenses:
-    description: "Should licenses be cached in branch to allow for status checks without caching first"
-    required: false
-    default: "false"
-  license_branch:
-    description: "Name of branch to cache licenses to (if branch doesn't exist, it will be made)"
-    required: false
-    default: "licenses"
-  cache_path:
-    description: "Path to store licenses. Please ensure this is the same as the value within your '.licensed.yml' file"
-    required: false
-    default: ".licenses"
   sns_topic:
     description: "AWS SNS Topic to push error logs to. Leave blank or 'false' to disable feature"
     required: false
     default: "false"
-  user_name:
-    description: "Name to use when pushing file changes"
-    required: false
-    default: "licensed-ci"
-  user_email:
-    description: "Email to use when pushing file changes"
-    required: false
-    default: "licensed-ci@users.noreply.github.com"
-  commit_message:
-    description: "Message to use when committing file changes"
-    required: false
-    default: "Auto-update license files"
 outputs:
   cache_log:
     description: "The output log of license caching"

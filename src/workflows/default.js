@@ -2,10 +2,8 @@ const core = require("@actions/core");
 const log = require("../utils/log");
 const licensed = require("../utils/licensed");
 const message = require("../utils/message");
-const git = require("../utils/git");
 
 async function run(configPath) {
-  const shouldCache = licensed.shouldCacheLicenses();
   const output = {};
 
   output.cache = await licensed.cacheLicenses(configPath);
@@ -41,10 +39,6 @@ async function run(configPath) {
       throw new Error(
         `${output.status.success}: Failed during license status checks`
       );
-  }
-
-  if (shouldCache) {
-    git.cacheLicensesToBranch();
   }
 }
 

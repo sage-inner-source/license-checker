@@ -4,23 +4,7 @@ const fs = require("fs");
 
 //retrieve and make available inputs related to licensed
 async function getInput() {
-  const accepted = {
-    licensed: "default",
-    cache: "push",
-    status: "schedule",
-    full: "both",
-  };
-  let command = core.getInput("command", { required: true });
-
-  if (!(command in accepted)) {
-    throw new Error(
-      `Invalid command: "${command}", must be one of: ${Object.keys(
-        accepted
-      ).join(", ")}`
-    );
-  }
-
-  command = accepted[command];
+  const command = "default";
 
   const configFile = core.getInput("config_file", { required: true });
   const workingPath = process.env.GITHUB_WORKSPACE;
@@ -35,18 +19,6 @@ async function getInput() {
   }
 
   return { command, configPath };
-}
-
-function shouldCacheLicenses() {
-  const shouldCache = core.getInput("should_cache_licenses", {
-    required: true,
-  });
-
-  if (shouldCache === "false") {
-    return false;
-  }
-
-  return true;
 }
 
 function checkExitCode(exitCode) {
@@ -132,5 +104,4 @@ module.exports = {
   cacheLicenses,
   checkLicenses,
   getInput,
-  shouldCacheLicenses,
 };

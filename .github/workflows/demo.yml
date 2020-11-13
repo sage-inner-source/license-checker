@@ -15,8 +15,7 @@ jobs:
           version: "2.x"
       - uses: ./
         with:
-          command: "full"
-  should-fail:
+  shows-output-but-should-fail:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,10 +25,9 @@ jobs:
           version: "2.x"
       - uses: ./
         with:
-          command: "full"
           should_fail: "true"
           display_output: "true"
-  sns:
+  sends-failing-licenses-to-sns:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -45,5 +43,4 @@ jobs:
           aws-region: eu-west-2
       - uses: ./
         with:
-          command: "full"
           sns_topic: ${{ secrets.AWS_TOPIC }}
