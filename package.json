@@ -33,6 +33,12 @@
   "devDependencies": {
     "@vercel/ncc": "^0.24.0",
     "eslint": "^7.4.0",
+    "husky": "^4.3.0",
     "jest": "^26.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prepare && git add dist"
+    }
   }
 }

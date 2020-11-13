@@ -1,4 +1,4 @@
-name: "Licensed CI Rebuild"
+name: "Licensed Checker"
 description: "Wait a designated number of milliseconds"
 inputs:
   config_file:
