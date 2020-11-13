@@ -14,7 +14,6 @@ jobs:
         with:
           version: "2.x"
       - uses: ./
-        with:
   shows-output-but-should-fail:
     runs-on: ubuntu-latest
     steps:
