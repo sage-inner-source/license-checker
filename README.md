@@ -1,116 +1,89 @@
-# Create a JavaScript Action
+# License Checker
 
-<p align="center">
-  <a href="https://github.com/actions/javascript-action/actions"><img alt="javscript-action status" src="https://github.com/actions/javascript-action/workflows/units-test/badge.svg"></a>
-</p>
+Runs a [github/licensed](https://github.com/github/licensed) CI workflow to check for dependency licenses that could potentially cause issues.
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+## Configuration
 
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+#### Repository Configuration
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+A `.licensed.yml` file is required by `licensed` to run. Please ensure that this file exists and is populated with initial license types to accept. If this file is not placed within the root of the repository, then please update the `config_file` option specified [below](#workflow-configuration). An example file is as follows, however for more information please check the [github/licensed docs](https://github.com/github/licensed/blob/master/docs/configuration.md).
 
-## Create an action from this template
+```yaml
+allowed:
+  - apache-2.0
+  - bsd-2-clause
+  - mit
+  - isc
 
-Click the `Use this Template` and provide the new repo details for your action
+cache_path: .licenses
 
-## Code in Main
-
-Install the dependencies
-
-```bash
-npm install
+reviewed:
+  npm:
+    - "@actions/http-client"
 ```
 
-Run the tests :heavy_check_mark:
+#### AWS SNS Configuration
 
-```bash
-$ npm test
+If you wish to send licenses for review to a SNS Topic, please ensure the following repository secrets are set:
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-...
-```
+- `AWS_ACCESS_KEY`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_TOPIC`
 
-## Change action.yml
+#### Workflow Configuration
 
-The action.yml contains defines the inputs and output for your action.
+- `config_file` - Optional. The path to the `.licensed.yml` file within the repository. Only needed if this file is not located in the root of the repository.
+- `display_output` - Optional. Whether output from the action should be displayed within the workflow logs. Defaults to `"false"`. If required, set to `"true"`.
+- `should_fail` - Optional. Whether the workflow should fail if licenses needing review are found. Defaults to `"false"`. If required, set to `"true"`.
+- `sns_topic` - Optional. AWS SNS Topic to send licenses for review to. If required, set to `${{ secrets.AWS_TOPIC }}` and add the relevent SNS Topic into the repository secrets.
 
-Update the action.yml with your name, description, inputs and outputs for your action.
+#### Workflow Outputs
 
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-const core = require('@actions/core');
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Package for distribution
-
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run prepare
-
-```bash
-npm run prepare
-```
-
-Since the packaged index.js is run from the dist folder.
-
-```bash
-git add dist
-```
-
-## Create a release branch
-
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
-
-Checkin to the v1 release branch
-
-```bash
-git checkout -b v1
-git commit -a -m "v1 release"
-```
-
-```bash
-git push origin v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket:
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
+If you wish/require to build further pipelines based on the result of the license checks, the workflow sets the `log` output.
 
 ## Usage
 
-You can now consume the action by referencing the v1 branch
+**Note: Examples shown are installing `node.js` and `java` applications. Please change the `Install Repo Dependencies` step to reflect the language/package manager you are using. Repeat for multiple languages/package managers within the same repository**
+
+Basic usage displaying `licensed` output to the workflow logs and failing if licenses needing review are found.
 
 ```yaml
-uses: actions/javascript-action@v1
-with:
-  milliseconds: 1000
+runs-on: ubuntu-latest
+steps:
+  - uses: actions/checkout@v2
+  - name: Install Repo Dependencies
+    run: npm ci && npm install --production
+  - name: Setup Licensed
+    uses: jonabc/setup-licensed@v1
+    with:
+      version: "2.x"
+  - name: Check Licenses
+    uses: sage-inner-source/license-checker@v1
+    with:
+      should_fail: "true"
+      display_output: "true"
 ```
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+Usage outputting licenses for review to AWS SNS Topic.
+
+```yaml
+runs-on: ubuntu-latest
+steps:
+  - uses: actions/checkout@v2
+  - name: Install Repo Dependencies
+    run: mvn install
+  - Setup Licensed
+    uses: jonabc/setup-licensed@v1
+    with:
+      version: "2.x"
+  - name: Configure AWS Credentials
+    uses: aws-actions/configure-aws-credentials@v1
+    with:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws-region: eu-west-2
+  - name: Check Licenses
+    uses: sage-inner-source/license-checker@v1
+    with:
+      sns_topic: ${{ secrets.AWS_TOPIC }}
+```

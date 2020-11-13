@@ -9,3 +9,5 @@ cache_path: .licenses
 ignored:
 
 reviewed:
+  npm:
+    - "@actions/http-client"

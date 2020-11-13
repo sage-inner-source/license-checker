@@ -1,10 +1,6 @@
 name: "Licensed CI Rebuild"
 description: "Wait a designated number of milliseconds"
 inputs:
-  github_token:
-    description: "Access token to push license updates to GitHub"
-    required: false
-    default: ${{ github.token }}
   config_file:
     description: "Path to licensed configuration file"
     required: false
@@ -22,9 +18,7 @@ inputs:
     required: false
     default: "false"
 outputs:
-  cache_log:
-    description: "The output log of license caching"
-  status_log:
+  log:
     description: "The output log of license status checking"
 runs:
   using: "node12"

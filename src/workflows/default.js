@@ -14,8 +14,7 @@ async function run(configPath) {
     log.write("Status Checks", output.status.log);
   }
 
-  core.setOutput("cache_log", output.cache.log);
-  core.setOutput("status_log", output.status.log);
+  core.setOutput("log", output.status.log);
 
   switch (output.cache.success) {
     case 0:
