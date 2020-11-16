@@ -28,14 +28,14 @@ If you wish to send licenses for review to a SNS Topic, please ensure the follow
 
 - `AWS_ACCESS_KEY`
 - `AWS_SECRET_ACCESS_KEY`
-- `AWS_TOPIC`
+- `AWS_SNS_TOPIC`
 
 #### Workflow Configuration
 
 - `config_file` - Optional. The path to the `.licensed.yml` file within the repository. Only needed if this file is not located in the root of the repository.
 - `display_output` - Optional. Whether output from the action should be displayed within the workflow logs. Defaults to `"false"`. If required, set to `"true"`.
 - `should_fail` - Optional. Whether the workflow should fail if licenses needing review are found. Defaults to `"false"`. If required, set to `"true"`.
-- `sns_topic` - Optional. AWS SNS Topic to send licenses for review to. If required, set to `${{ secrets.AWS_TOPIC }}` and add the relevent SNS Topic into the repository secrets.
+- `sns_topic` - Optional. AWS SNS Topic to send licenses for review to. If required, set to `${{ secrets.AWS_SNS_TOPIC }}` and add the relevent SNS Topic into the repository secrets.
 
 #### Workflow Outputs
 
@@ -43,7 +43,7 @@ If you wish/require to build further pipelines based on the result of the licens
 
 ## Usage
 
-**Note: Examples shown are installing `node.js` and `java` applications. Please change the `Install Repo Dependencies` step to reflect the language/package manager you are using. Repeat for multiple languages/package managers within the same repository. If no licenses are scanned, then please ensure the language/package manager is supported by [github/licensed](https://github.com/github/licensed/tree/master/docs/sources) and carry out any additional steps mentioned for the specific source.**
+**Note: Examples shown are installing `node.js` and `java` applications. Please change the `Install Repo Dependencies` and `Setup Language` steps to reflect the package manager/language you are using. Repeat for multiple languages/package managers within the same repository. Some package managers/languages require additional steps for Licensed to run, so please ensure the package manager/language is supported by [github/licensed](https://github.com/github/licensed/tree/master/docs/sources) and carry out any additional steps mentioned for the specific source.**
 
 Basic usage displaying `licensed` output to the workflow logs and failing if licenses needing review are found.
 
@@ -70,8 +70,12 @@ Usage outputting licenses for review to AWS SNS Topic.
 runs-on: ubuntu-latest
 steps:
   - uses: actions/checkout@v2
+  - name: Setup Language
+    uses: actions/setup-java@v1
+    with:
+      java-version: '11'
   - name: Install Repo Dependencies
-    run: mvn install
+    run: mvn clean install
   - name: Setup Licensed
     uses: jonabc/setup-licensed@v1
     with:
@@ -85,5 +89,5 @@ steps:
   - name: Check Licenses
     uses: sage-inner-source/license-checker@v1.1.0
     with:
-      sns_topic: ${{ secrets.AWS_TOPIC }}
+      sns_topic: ${{ secrets.AWS_SNS_TOPIC }}
 ```
